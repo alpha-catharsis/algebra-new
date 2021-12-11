@@ -1,0 +1,45 @@
+package alpha-algebra-new
+-- version =
+authors = "Alpha Catharsis"
+-- maintainers =
+-- license =
+-- brief =
+-- readme =
+-- homepage =
+-- sourceloc =
+-- bugtracker =
+
+-- packages to add to search path
+-- depends =
+
+-- modules to install
+modules = Alpha.Algebra
+
+-- main file (i.e. file to load at REPL)
+main = Main
+
+-- name of executable
+executable = "test"
+opts = "--total --Werror"
+sourcedir = "src"
+
+-- builddir =
+-- outputdir =
+
+-- script to run before building
+-- prebuild =
+
+-- script to run after building
+-- postbuild =
+
+-- script to run after building, before installing
+-- preinstall =
+
+-- script to run after installing
+-- postinstall =
+
+-- script to run before cleaning
+-- preclean =
+
+-- script to run after cleaning
+-- postclean =
