@@ -68,9 +68,18 @@ appendNilLeftNeutral : (l : List a) -> [] ++ l = l
 appendNilLeftNeutral _ = Refl
 
 public export
+LeftIdentElem Append (List a) where
+  leftIdentPrf = appendNilLeftNeutral
+
+public export
+RightIdentElem Append (List a) where
+  rightIdentPrf = appendNilRightNeutral
+
+public export
+IdentElem Append (List a) where
+
+public export
 Monoid.Monoid Append (List a) where
-  monoidLeftPrfTH _ = appendNilLeftNeutral
-  monoidRightPrfTH _ = appendNilRightNeutral
 
 public export
 DefaultMonoid (List a) where

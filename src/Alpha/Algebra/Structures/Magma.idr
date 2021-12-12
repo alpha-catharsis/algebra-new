@@ -9,6 +9,7 @@ module Alpha.Algebra.Structures.Magma
 -------------------
 
 import Alpha.Algebra.Data.TH
+import Alpha.Algebra.Structures.Pointed
 
 --------
 -- Magma
@@ -45,6 +46,17 @@ interface Magma t a => Commutative t a where
 public export
 interface Magma t a => Associative t a where
   associativePrf : (x : a) -> (y : a) -> (z : a) -> binOp {t} x (binOp {t} y z) = binOp {t} (binOp {t} x y) z
+
+public export
+interface Magma t a => Pointed t a => LeftIdentElem t a where
+  leftIdentPrf : (x : a) -> binOp {t} (basepoint {t}) x = x
+
+public export
+interface Magma t a => Pointed t a => RightIdentElem t a where
+  rightIdentPrf : (x : a) -> binOp {t} x (basepoint {t}) = x
+
+public export
+interface LeftIdentElem t a => RightIdentElem t a => IdentElem t a where
 
 -----------------
 -- Magma morphism

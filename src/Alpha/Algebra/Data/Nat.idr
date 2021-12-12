@@ -93,14 +93,18 @@ DefaultSemigroup Nat where
 -----------------------
 
 public export
-Monoid.Monoid Add Nat where
-  monoidLeftPrfTH _ = plusZeroLeftNeutral
-  monoidRightPrfTH _ = plusZeroRightNeutral
+LeftIdentElem Add Nat where
+  leftIdentPrf = plusZeroLeftNeutral
 
 public export
-Monoid.Monoid Mult Nat where
-  monoidLeftPrfTH _ = multOneLeftNeutral
-  monoidRightPrfTH _ = multOneRightNeutral
+RightIdentElem Add Nat where
+  rightIdentPrf = plusZeroRightNeutral
+
+public export
+IdentElem Add Nat where
+
+public export
+Monoid.Monoid Add Nat where
 
 public export
 DefaultMonoid Nat where
