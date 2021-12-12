@@ -5,11 +5,20 @@
 module Alpha.Algebra.Data.Nat
 
 -------------------
+-- External imports
+-------------------
+
+import Data.Nat
+
+-------------------
 -- Internal imports
 -------------------
 
 import Alpha.Algebra.Data.Ops
+import Alpha.Algebra.Structures.Magma
+import Alpha.Algebra.Structures.Monoid
 import Alpha.Algebra.Structures.Pointed
+import Alpha.Algebra.Structures.Semigroup
 import Alpha.Algebra.Structures.UnarySystem
 
 ----------------------------
@@ -18,18 +27,18 @@ import Alpha.Algebra.Structures.UnarySystem
 
 public export
 %hint
-pointedAddNat : PointedG Add Nat
-pointedAddNat = MkPointedG Add Z
+pointedAddNat : Pointed Add Nat
+pointedAddNat = MkPointed Add Z
 
 public export
 %hint
-pointedMultNat : PointedG Mult Nat
-pointedMultNat = MkPointedG Mult (S Z)
+pointedMultNat : Pointed Mult Nat
+pointedMultNat = MkPointed Mult (S Z)
 
 public export
 %hint
-basepointNat : Pointed Nat
-basepointNat = MkPointed pointedAddNat
+defaultPointedNat : DefaultPointed Nat
+defaultPointedNat = MkDefaultPointed Add Nat
 
 ----------------------------
 -- UnarySystem implementions
@@ -37,10 +46,62 @@ basepointNat = MkPointed pointedAddNat
 
 public export
 %hint
-unarySystemSuccNat : UnarySystemG Succ Nat
-unarySystemSuccNat = MkUnarySystemG Succ S
+unarySystemSuccNat : UnarySystem Succ Nat
+unarySystemSuccNat = MkUnarySystem Succ S
 
 public export
 %hint
-unarySystemNat : UnarySystem Nat
-unarySystemNat = MkUnarySystem unarySystemSuccNat
+defaultUnarySystemNat : DefaultUnarySystem Nat
+defaultUnarySystemNat = MkDefaultUnarySystem Succ Nat
+
+----------------------
+-- Magma implementions
+----------------------
+
+public export
+%hint
+magmaAddNat : Magma Add Nat
+magmaAddNat = MkMagma Add (+)
+
+public export
+%hint
+magmaMultNat : Magma Mult Nat
+magmaMultNat = MkMagma Mult (*)
+
+public export
+%hint
+defaultMagmaNat : DefaultMagma Nat
+defaultMagmaNat = MkDefaultMagma Add Nat
+
+--------------------------
+-- Semigroup implementions
+--------------------------
+
+public export
+%hint
+semigroupAddNat : Semigroup Add Nat
+semigroupAddNat = MkSemigroup Add magmaAddNat plusAssociative
+
+public export
+%hint
+semigroupMultNat : Semigroup Mult Nat
+semigroupMultNat = MkSemigroup Mult magmaMultNat multAssociative
+
+-----------------------
+-- Monoid implementions
+-----------------------
+
+public export
+%hint
+monoidAddNat : Monoid Add Nat
+monoidAddNat = MkMonoid Add pointedAddNat semigroupAddNat plusZeroLeftNeutral plusZeroRightNeutral
+
+public export
+%hint
+monoidMultNat : Monoid Mult Nat
+monoidMultNat = MkMonoid Mult pointedMultNat semigroupMultNat multOneLeftNeutral multOneRightNeutral
+
+public export
+%hint
+defaultMonoidNat : DefaultMonoid Nat
+defaultMonoidNat = MkDefaultMonoid Add Nat
