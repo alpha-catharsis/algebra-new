@@ -16,3 +16,6 @@ data Add : Type where
 
 public export
 data Mult : Type where
+
+public export
+data Append : Type where
