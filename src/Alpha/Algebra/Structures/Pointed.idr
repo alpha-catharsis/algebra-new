@@ -11,7 +11,7 @@ module Alpha.Algebra.Structures.Pointed
 import Alpha.Algebra.Data.TH
 
 --------------
--- Pointed Set
+-- Pointed set
 --------------
 
 public export
@@ -33,3 +33,11 @@ interface DefaultPointed a where
 public export
 basepoint' : DefaultPointed a => Pointed (defaultPointed (MkTH a)) a => a
 basepoint' = basepointTH (MkTH (defaultPointed (MkTH a)))
+
+--------------
+-- Pointed map
+--------------
+
+public export
+interface Pointed t a => Pointed t' b => PointedMap t t' a b (0 f : a -> b) where
+  pointedMapPrf : f (basepointTH (MkTH t)) = basepointTH (MkTH t')
