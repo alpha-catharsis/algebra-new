@@ -71,12 +71,18 @@ DefaultMagma Nat where
 --------------------------
 
 public export
+Associative Add Nat where
+  associativePrf = plusAssociative
+
+public export
 Semigroup.Semigroup Add Nat where
-  semigroupPrfTH _ = plusAssociative
+
+public export
+Associative Mult Nat where
+  associativePrf = multAssociative
 
 public export
 Semigroup.Semigroup Mult Nat where
-  semigroupPrfTH _ = multAssociative
 
 public export
 DefaultSemigroup Nat where

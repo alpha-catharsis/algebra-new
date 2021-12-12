@@ -50,8 +50,11 @@ DefaultMagma (List a) where
 --------------------------
 
 public export
+Associative Append (List a) where
+  associativePrf = appendAssociative
+
+public export
 Semigroup.Semigroup Append (List a) where
-  semigroupPrfTH _ = appendAssociative
 
 public export
 DefaultSemigroup (List a) where

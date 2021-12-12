@@ -34,6 +34,18 @@ public export
 binOp' : DefaultMagma a => Magma (defaultMagma (MkTH a)) a => a -> a -> a
 binOp' = binOpTH (MkTH (defaultMagma (MkTH a)))
 
+-------------------
+-- Magma properties
+-------------------
+
+public export
+interface Magma t a => Commutative t a where
+  commutativePrf : (x : a) -> (y : a) -> binOp {t} x y = binOp {t} y x
+
+public export
+interface Magma t a => Associative t a where
+  associativePrf : (x : a) -> (y : a) -> (z : a) -> binOp {t} x (binOp {t} y z) = binOp {t} (binOp {t} x y) z
+
 -----------------
 -- Magma morphism
 -----------------
