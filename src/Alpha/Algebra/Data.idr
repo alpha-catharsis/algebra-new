@@ -10,3 +10,4 @@ module Alpha.Algebra.Data
 
 import public Alpha.Algebra.Data.Nat
 import public Alpha.Algebra.Data.Ops
+import public Alpha.Algebra.Data.TH

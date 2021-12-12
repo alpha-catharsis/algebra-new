@@ -8,6 +8,7 @@ module Alpha.Algebra.Structures.Monoid
 -- Internal imports
 -------------------
 
+import Alpha.Algebra.Data.TH
 import Alpha.Algebra.Structures.Magma
 import Alpha.Algebra.Structures.Pointed
 import Alpha.Algebra.Structures.Semigroup
@@ -17,54 +18,44 @@ import Alpha.Algebra.Structures.Semigroup
 ----------------
 
 public export
-MonoidLeftPrf : {a : Type} -> Pointed t a -> Magma t a -> Type
-MonoidLeftPrf (MkPointed _ u) (MkMagma _ f) = (x : a) -> f u x = x
+0 MonoidLeftPrf : (t : Type) -> (a : Type) -> Pointed t a => Magma t a => Type
+MonoidLeftPrf t a = (x : a) -> binOp {t} (basepoint {t}) x = x
 
 public export
-MonoidRightPrf : {a : Type} -> Pointed t a -> Magma t a -> Type
-MonoidRightPrf (MkPointed _ u) (MkMagma _ f) = (x : a) -> f x u = x
+0 MonoidRightPrf : (t : Type) -> (a : Type) -> Pointed t a => Magma t a => Type
+MonoidRightPrf t a  = (x : a) -> binOp {t} x (basepoint {t}) = x
 
 ---------
 -- Monoid
 ---------
 
 public export
-data Monoid : Type -> Type -> Type where
-  [noHints]
-  MkMonoid : (0 t : Type) -> (pnt : Pointed t a) -> (sg : Semigroup t a) ->
-             MonoidLeftPrf pnt (semigroupMagma @{sg}) ->
-             MonoidRightPrf pnt (semigroupMagma @{sg}) -> Monoid t a
-
+interface Pointed t a => Semigroup t a => Monoid t a where
+  0 monoidLeftPrfTH : TH t -> MonoidLeftPrf t a
+  0 monoidRightPrfTH : TH t -> MonoidRightPrf t a
 
 public export
-0 monoidType : Monoid t a => Type
-monoidType @{MkMonoid t _ _ _ _} = t
+0 monoidLeftPrf : Monoid t a => MonoidLeftPrf t a
+monoidLeftPrf = monoidLeftPrfTH (MkTH {t})
 
 public export
-monoidPointed : Monoid t a => Pointed t a
-monoidPointed @{MkMonoid _ pnt _ _ _} = pnt
-
-public export
-monoidSemigroup : Monoid t a => Semigroup t a
-monoidSemigroup @{MkMonoid _ _ sg _ _} = sg
-
-public export
-0 monoidLeftPrf : (mn : Monoid t a) => MonoidLeftPrf (monoidPointed @{mn}) (semigroupMagma @{monoidSemigroup @{mn}})
-monoidLeftPrf @{MkMonoid _ _ _ lprf _} = lprf
-
-public export
-0 monoidRightPrf : (mn : Monoid t a) => MonoidRightPrf (monoidPointed @{mn}) (semigroupMagma @{monoidSemigroup @{mn}})
-monoidRightPrf @{MkMonoid _ _ _ _ rprf} = rprf
+0 monoidRightPrf : Monoid t a => MonoidRightPrf t a
+monoidRightPrf = monoidRightPrfTH (MkTH {t})
 
 -----------------
 -- Default monoid
 -----------------
 
 public export
-data DefaultMonoid : Type -> Type where
-  [noHints]
-  MkDefaultMonoid : (0 t : Type) -> (0 a : Type) -> DefaultMonoid a
+interface DefaultMonoid a where
+  defaultMonoid : TH a -> Type
 
 public export
-0 defaultMonoid : DefaultMonoid a => Type
-defaultMonoid @{MkDefaultMonoid t _} = t
+0 monoidLeftPrf' : DefaultMonoid a => Monoid (defaultMonoid (MkTH a)) a =>
+                   MonoidLeftPrf (defaultMonoid (MkTH a)) a
+monoidLeftPrf' = monoidLeftPrfTH (MkTH (defaultMonoid (MkTH a)))
+
+public export
+0 monoidRightPrf' : DefaultMonoid a => Monoid (defaultMonoid (MkTH a)) a =>
+                    MonoidRightPrf (defaultMonoid (MkTH a)) a
+monoidRightPrf' = monoidRightPrfTH (MkTH (defaultMonoid (MkTH a)))

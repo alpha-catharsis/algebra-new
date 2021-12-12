@@ -4,36 +4,32 @@
 
 module Alpha.Algebra.Structures.Magma
 
+-------------------
+-- Internal imports
+-------------------
+
+import Alpha.Algebra.Data.TH
+
 --------
 -- Magma
 --------
 
 public export
-data Magma : Type -> Type -> Type where
-  [noHints]
-  MkMagma : (0 t : Type) -> (a -> a -> a) -> Magma t a
-
-public export
-0 magmaType : Magma t a => Type
-magmaType @{MkMagma t _} = t
+interface Magma t a where
+  binOpTH : TH t -> a -> a -> a
 
 public export
 binOp : Magma t a => a -> a -> a
-binOp @{MkMagma _ f} = f
+binOp = binOpTH (MkTH {t})
 
 ----------------
 -- Default magma
 ----------------
 
 public export
-data DefaultMagma : Type -> Type where
-  [noHints]
-  MkDefaultMagma : (0 t : Type) -> (0 a : Type) -> DefaultMagma a
+interface DefaultMagma a where
+  defaultMagma : TH a -> Type
 
 public export
-0 defaultMagma : DefaultMagma a => Type
-defaultMagma @{MkDefaultMagma t _} = t
-
-public export
-binOp' : (dp : DefaultMagma a) => Magma (defaultMagma @{dp}) a => a -> a -> a
-binOp' @{MkDefaultMagma t _ } = binOp {t}
+binOp' : DefaultMagma a => Magma (defaultMagma (MkTH a)) a => a -> a -> a
+binOp' = binOpTH (MkTH (defaultMagma (MkTH a)))

@@ -8,6 +8,7 @@ module Alpha.Algebra.Structures.Semigroup
 -- Internal imports
 -------------------
 
+import Alpha.Algebra.Data.TH
 import Alpha.Algebra.Structures.Magma
 
 ------------------
@@ -15,40 +16,31 @@ import Alpha.Algebra.Structures.Magma
 ------------------
 
 public export
-0 AssociativePrf : {a : Type} -> Magma t a -> Type
-AssociativePrf (MkMagma _ f) = (x : a) -> (y : a) -> (z : a) -> f x (f y z) = f (f x y) z
+0 SemigroupPrf : (t : Type) -> (a : Type) -> Magma t a => Type
+SemigroupPrf t a = (x : a) -> (y : a) -> (z : a) ->
+                   binOp {t} x (binOp {t} y z) = binOp {t} (binOp {t} x y) z
 
 ------------
 -- Semigroup
 ------------
 
 public export
-data Semigroup : Type -> Type -> Type where
-  [noHints]
-  MkSemigroup : (0 t : Type) -> (mgm : Magma t a) -> (0 prf : AssociativePrf mgm) -> Semigroup t a
+interface Magma t a => Semigroup t a where
+  0 semigroupPrfTH : TH t -> SemigroupPrf t a
 
 public export
-0 semigroupType : Semigroup t a => Type
-semigroupType @{MkSemigroup t _ _} = t
-
-public export
-semigroupMagma : Semigroup t a => Magma t a
-semigroupMagma @{MkSemigroup _ mgm _} = mgm
-
-public export
-0 semigroupPrf : (sg : Semigroup t a) => AssociativePrf (semigroupMagma @{sg})
-semigroupPrf @{MkSemigroup _ _ prf} = prf
+0 semigroupPrf : Semigroup t a => SemigroupPrf t a
+semigroupPrf = semigroupPrfTH (MkTH {t})
 
 --------------------
 -- Default semigroup
 --------------------
 
 public export
-data DefaultSemigroup : Type -> Type where
-  [noHints]
-  MkDefaultSemigroup : (0 t : Type) -> (0 a : Type) -> DefaultSemigroup a
+interface DefaultSemigroup a where
+  defaultSemigroup : TH a -> Type
 
 public export
-0 defaultSemigroup : DefaultSemigroup a => Type
-defaultSemigroup @{MkDefaultSemigroup t _} = t
-
+0 semigroupPrf' : DefaultSemigroup a => Semigroup (defaultSemigroup (MkTH a)) a =>
+                  SemigroupPrf (defaultSemigroup (MkTH a)) a
+semigroupPrf' = semigroupPrfTH (MkTH (defaultSemigroup (MkTH a)))

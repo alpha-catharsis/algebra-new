@@ -4,36 +4,32 @@
 
 module Alpha.Algebra.Structures.UnarySystem
 
+-------------------
+-- Internal imports
+-------------------
+
+import Alpha.Algebra.Data.TH
+
 ---------------
 -- Unary system
 ---------------
 
 public export
-data UnarySystem : Type -> Type -> Type where
-  [noHints]
-  MkUnarySystem : (0 t : Type) -> (a -> a) -> UnarySystem t a
-
-public export
-0 unarySystemType : UnarySystem t a => Type
-unarySystemType @{MkUnarySystem t _} = t
+interface UnarySystem t a where
+  unOpTH : TH t -> a -> a
 
 public export
 unOp : UnarySystem t a => a -> a
-unOp @{MkUnarySystem _ f} = f
+unOp = unOpTH (MkTH {t})
 
 -----------------------
 -- Default unary system
 -----------------------
 
 public export
-data DefaultUnarySystem : Type -> Type where
-  [noHints]
-  MkDefaultUnarySystem : (0 t : Type) -> (0 a : Type) -> DefaultUnarySystem a
+interface DefaultUnarySystem a where
+  defaultUnarySystem : TH a -> Type
 
 public export
-0 defaultUnarySystem : DefaultUnarySystem a => Type
-defaultUnarySystem @{MkDefaultUnarySystem t _} = t
-
-public export
-unOp' : (dus : DefaultUnarySystem a) => UnarySystem (defaultUnarySystem @{dus}) a => a -> a
-unOp' @{MkDefaultUnarySystem t _} = unOp {t}
+unOp' : DefaultUnarySystem a => UnarySystem (defaultUnarySystem (MkTH a)) a => a -> a
+unOp' = unOpTH (MkTH (defaultUnarySystem (MkTH a)))
